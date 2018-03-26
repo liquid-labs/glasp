@@ -37,4 +37,13 @@ if [ -f $PWD/.glaspignore ]; then
   esac
 fi
 
+# Safety checks.
+if [ x"$ACTION" == x"pull" ]; then
+  LCOUNT=`git status --porcelain . | wc -l`
+  if [ $LCOUNT -gt 0 ]; then
+    echo "Found local uncommitted changes. Aborting pull." >&2
+    exit 2
+  fi
+fi
+
 exec clasp "$@"
