@@ -1,0 +1,26 @@
+{
+  "name": "glasp",
+  "version": "0.1.0",
+  "description": "Simple command line tool combining clasp and git for Google Apps Script development.",
+  "main": "glasp.sh",
+  "bin": {
+    "glasp": "./glasp.sh"
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Liquid-Labs/glasp.git"
+  },
+  "keywords": [
+    "Apps",
+    "Script"
+  ],
+  "author": "Zane Rockenbaugh",
+  "license": "Apache-2.0",
+  "bugs": {
+    "url": "https://github.com/Liquid-Labs/glasp/issues"
+  },
+  "homepage": "https://github.com/Liquid-Labs/glasp#readme"
+}
