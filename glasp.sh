@@ -21,22 +21,6 @@ case "$ACTION" in
     fi;;
 esac
 
-# Do we need to do something with .glaspignore
-if [ -f $PWD/.glaspignore ]; then
-  case "$ACTION" in
-    pull)
-      cp "$PWD/.glaspignore" "$PWD/.claspignore"
-      # on pull, also ignore the library files, which are only pushed
-      echo >> "$PWD/.claspignore"
-      grep --no-filename -e '^#do-push-file' "$PWD/.glaspignore" | awk '{print $2}' >> "$PWD/.claspignore"
-      ;;
-    push)
-      # on all other actions, only ignore the commonly ignored files
-      cp "$PWD/.glaspignore" "$PWD/.claspignore"
-      ;;
-  esac
-fi
-
 # Safety checks.
 if [ x"$ACTION" == x"pull" ]; then
   LCOUNT=`git status --porcelain . | wc -l`
