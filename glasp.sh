@@ -18,7 +18,7 @@ case "$ACTION" in
     mkdir -p lib
     for FILE in "$IMPORT_PATH"/*.js "$IMPORT_PATH"/*.html "$IMPORT_PATH/lib/"*; do
       if [ -f "$FILE" ] && [ ! -L lib/`basename "$FILE"` ]; then
-        `cd lib && ln -s "$FILE" .`
+        ln -s ../"$FILE" lib/
       fi
     done
     exit 0;; # otherwise, would try to run 'clasp import'
