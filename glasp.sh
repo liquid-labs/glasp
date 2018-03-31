@@ -9,25 +9,40 @@ done
 
 # Check re. actions using .clasp.json
 case "$ACTION" in
-  pull|push|open|deployments|deploy|undeploy|redeploy|versions|version)
+  import-lib)
+    IMPORT_PATH="$2"
+    if [ ! -d "$IMPORT_PATH" ]; then
+      echo "Did not find library path '$IMPORT_PATH' for import." >&2
+      exit 1
+    fi
+    mkdir -p lib
+    for FILE in "$IMPORT_PATH"/*.js "$IMPORT_PATH"/*.html "$IMPORT_PATH/lib/"*; do
+      if [ -f "$FILE" ] && [ ! -L lib/`basename "$FILE"` ]; then
+        `cd lib && ln -s "$FILE" .`
+      fi
+    done
+    exit 0;; # otherwise, would try to run 'clasp import'
+  pull|push|open|deployments|deploy|undeploy|redeploy|versions|version|import)
     if [ ! -f .clasp.json ]; then
       echo "Did not find '.clasp.json' file. Execute from clasp root directory." >&2
       exit 1
+    fi
+    # Safety checks.
+    if [ x"$ACTION" == x"pull" ]; then
+      LCOUNT=`git status --porcelain . | wc -l`
+      if [ $LCOUNT -gt 0 ]; then
+        echo "Found local uncommitted changes. Aborting pull." >&2
+        exit 2
+      fi
     fi;;
   create|clone)
     if [ -f .clasp.json ]; then
       echo "Existing '.clasp.json' found. Aborting." >&2
       exit 1
     fi;;
+  *)
+    echo "Unknown action '$ACTION'." >&2
+    exit 3;;
 esac
-
-# Safety checks.
-if [ x"$ACTION" == x"pull" ]; then
-  LCOUNT=`git status --porcelain . | wc -l`
-  if [ $LCOUNT -gt 0 ]; then
-    echo "Found local uncommitted changes. Aborting pull." >&2
-    exit 2
-  fi
-fi
 
 exec clasp "$@"
